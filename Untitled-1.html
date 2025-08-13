@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Chúc mừng sinh nhật!</title>
+<style>
+    body {
+        background: linear-gradient(to bottom, #ffdde1, #ee9ca7);
+        margin: 0;
+        overflow: hidden;
+    }
+    h1 {
+        text-align: center;
+        font-size: 3em;
+        color: white;
+        text-shadow: 2px 2px 5px #ff66b2;
+        animation: glow 1.5s infinite alternate;
+        margin-top: 20px;
+        font-family: 'Comic Sans MS', cursive;
+    }
+    @keyframes glow {
+        from { text-shadow: 0 0 10px #ff66b2; }
+        to   { text-shadow: 0 0 20px #ff3399; }
+    }
+    .img-item {
+        position: absolute;
+        width: 120px;
+        opacity: 0;
+        transform: translateY(100vh);
+        transition: all 1.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    .center {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+    .spread {
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 1;
+    }
+
+    /* Nút góc phải giữa màn hình */
+#noteBtn {
+    position: fixed;
+    top: 30%;
+    right: 350px;
+    transform: translateY(-50%);
+    padding: 10px 15px;
+    background: #ff66b2;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: background 0.3s;
+    z-index: 10;
+}
+#noteBtn:hover {
+    background: #ff3399;
+}
+
+/* Nội dung ghi chú */
+#noteBox {
+    position: fixed;
+    top: 50%;
+    right: 260px; /* Cách nút một khoảng */
+    transform: translateY(-50%);
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 6px 30px rgba(0,0,0,0.3);
+    font-size: 16px;
+    width: 330px;
+    display: none;
+    z-index: 9;
+}
+</style>
+</head>
+<body>
+
+<h1>🎂 Happy birthday! 🎉</h1>
+
+<!-- Nút & box note -->
+<button id="noteBtn">📜 Click me please </button>
+<div id="noteBox">
+    <div style="text-align: center; font-weight: bold;">
+        Happy birthday, dear Mơ 🎉 ❤️
+    </div>
+    Hope your smile stays bright,
+    your beauty grows,
+    and your heart stays as kind as it is now.<br>
+    May you achieve every goal you dream of 🎁🎉
+</div>
+
+<script>
+const images = [
+    "aa.jpg",
+    "dd.jpg",
+    "ff.jpg",
+    "kk.jpg",
+    "ll.jpg",
+    "ss.jpg"
+];
+
+const imgElements = [];
+const delayPerImage = 800;
+images.forEach((src, i) => {
+    const img = document.createElement("img");
+    img.src = src;
+    img.className = "img-item";
+    document.body.appendChild(img);
+    imgElements.push(img);
+    setTimeout(() => {
+        img.classList.add("center");
+    }, i * delayPerImage);
+});
+
+// Sau khi gom giữa → tách ra đều
+const spreadTime = images.length * delayPerImage + 1500;
+setTimeout(() => {
+    const spacing = window.innerWidth / (images.length + 1);
+    imgElements.forEach((img, i) => {
+        img.classList.remove("center");
+        img.classList.add("spread");
+        img.style.left = (spacing * (i + 1) - 60) + "px";
+    });
+}, spreadTime);
+
+// Sau khi tách ra đều → quay quanh tâm bên trái
+setTimeout(() => {
+    const centerX = window.innerWidth * 0.25;
+    const centerY = window.innerHeight / 2 + 90;
+    const radius = 180;
+    let angleOffset = 0;
+
+    function animate() {
+        imgElements.forEach((img, i) => {
+            const angle = angleOffset + (2 * Math.PI / imgElements.length) * i;
+            const x = centerX + radius * Math.cos(angle) - img.width / 2;
+            const y = centerY + radius * Math.sin(angle) - img.height / 2;
+            img.style.left = `${x}px`;
+            img.style.top = `${y}px`;
+        });
+        angleOffset += 0.01;
+        requestAnimationFrame(animate);
+    }
+    animate();
+}, spreadTime + 2000);
+
+// Toggle hiển thị ghi chú
+document.getElementById("noteBtn").addEventListener("click", () => {
+    const box = document.getElementById("noteBox");
+    box.style.display = (box.style.display === "block") ? "none" : "block";
+});
+</script>
+
+</body>
+</html>
